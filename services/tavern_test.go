@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"testing"
 
 	"github.com/google/uuid"
@@ -10,7 +11,7 @@ import (
 func Test_Tavern(t *testing.T) {
 	products := init_products(t)
 	os, err := NewOderService(
-		WithMemoryCustomerRepository(),
+		WithMongoCustomerRepository(context.Background(), "mongodb:localhost://27017"),
 		WithMemoryProductRepository(products),
 	)
 	if err != nil {

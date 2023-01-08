@@ -44,5 +44,7 @@ func (t Tavern) Order(customer uuid.UUID, products []uuid.UUID) error {
 	}
 	log.Printf("\nBill the customer: %0.00f\n", price)
 
+	//Do billing service here
+
 	return nil
 }
