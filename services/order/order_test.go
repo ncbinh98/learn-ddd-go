@@ -1,28 +1,29 @@
-package services
+package order
 
 import (
 	"testing"
 
 	"github.com/google/uuid"
-	"github.com/ncbinh98/learn-ddd-go/aggregate"
+	"github.com/ncbinh98/learn-ddd-go/domain/customer"
+	"github.com/ncbinh98/learn-ddd-go/domain/product"
 )
 
-func init_products(t *testing.T) []aggregate.Product {
-	beer, err := aggregate.NewProduct("Beer", "good thing", 0.99)
+func init_products(t *testing.T) []product.Product {
+	beer, err := product.NewProduct("Beer", "good thing", 0.99)
 	if err != nil {
 		t.Fatal(err)
 	}
-	peenuts, err := aggregate.NewProduct("Peenuts", "snacks", 0.99)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	wine, err := aggregate.NewProduct("Wine", "nasty thing", 0.99)
+	peenuts, err := product.NewProduct("Peenuts", "snacks", 0.99)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	return []aggregate.Product{beer, peenuts, wine}
+	wine, err := product.NewProduct("Wine", "nasty thing", 0.99)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	return []product.Product{beer, peenuts, wine}
 
 }
 
@@ -36,7 +37,7 @@ func TestOrder_NewOrderService(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	cust, err := aggregate.NewCustomer("Binh")
+	cust, err := customer.NewCustomer("Binh")
 	if err != nil {
 		t.Error(err)
 	}

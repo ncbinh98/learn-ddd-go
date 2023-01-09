@@ -1,11 +1,10 @@
-package services
+package order
 
 import (
 	"context"
 	"log"
 
 	"github.com/google/uuid"
-	"github.com/ncbinh98/learn-ddd-go/aggregate"
 	"github.com/ncbinh98/learn-ddd-go/domain/customer"
 	"github.com/ncbinh98/learn-ddd-go/domain/customer/memory"
 	"github.com/ncbinh98/learn-ddd-go/domain/customer/mongo"
@@ -16,8 +15,8 @@ import (
 type OrderConfiguration func(os *OrderService) error
 
 type OrderService struct {
-	customers customer.CustomerRepository
-	products  product.ProductRepository
+	customers customer.Repository
+	products  product.Repository
 }
 
 func NewOderService(cfgs ...OrderConfiguration) (*OrderService, error) {
@@ -35,7 +34,7 @@ func NewOderService(cfgs ...OrderConfiguration) (*OrderService, error) {
 }
 
 // WithCustomerRepository applies a customer repository to the OrderService
-func WithCustomerRepository(cr customer.CustomerRepository) OrderConfiguration {
+func WithCustomerRepository(cr customer.Repository) OrderConfiguration {
 	// Return a function that matches the orderconfiguration alias
 	return func(os *OrderService) error {
 		os.customers = cr
@@ -61,7 +60,7 @@ func WithMongoCustomerRepository(ctx context.Context, connectionString string) O
 
 }
 
-func WithMemoryProductRepository(products []aggregate.Product) OrderConfiguration {
+func WithMemoryProductRepository(products []product.Product) OrderConfiguration {
 	return func(os *OrderService) error {
 		pr := prodmem.New()
 		for _, p := range products {
@@ -82,7 +81,7 @@ func (o *OrderService) CreateOrder(customerId uuid.UUID, productsIDs []uuid.UUID
 	}
 
 	// Get each product, we need product repository
-	var products []aggregate.Product
+	var products []product.Product
 	var total float64
 	for _, id := range productsIDs {
 		p, err := o.products.GetByID(id)
@@ -96,4 +95,17 @@ func (o *OrderService) CreateOrder(customerId uuid.UUID, productsIDs []uuid.UUID
 	log.Printf("Customer: %s has ordered %d products", c.GetID(), len(products))
 
 	return total, nil
+}
+
+func (o *OrderService) AddNewCustomer(name string) (uuid.UUID, error) {
+	c, err := customer.NewCustomer(name)
+	if err != nil {
+		return uuid.Nil, err
+	}
+	err = o.customers.Add(c)
+	if err != nil {
+		return uuid.Nil, err
+	}
+
+	return c.GetID(), nil
 }

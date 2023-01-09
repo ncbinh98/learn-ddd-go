@@ -1,12 +1,11 @@
 // package aggregate hold our aggrets that combines many entities into a full object
-package aggregate
+package customer
 
 import (
 	"errors"
 
 	"github.com/google/uuid"
 	"github.com/ncbinh98/learn-ddd-go/entity"
-	"github.com/ncbinh98/learn-ddd-go/valueobject"
 )
 
 var (
@@ -18,7 +17,7 @@ type Customer struct {
 	// which means person.ID is the main identifier for the customer
 	person       *entity.Person
 	products     []*entity.Item
-	transactions []valueobject.Transaction
+	transactions []entity.Transaction
 }
 
 // NewCustomer is a factory to create new customer aggregate
@@ -36,7 +35,7 @@ func NewCustomer(name string) (Customer, error) {
 	return Customer{
 		person:       person,
 		products:     make([]*entity.Item, 0),
-		transactions: make([]valueobject.Transaction, 0),
+		transactions: make([]entity.Transaction, 0),
 	}, nil
 }
 

@@ -1,10 +1,10 @@
-package aggregate_test
+package customer_test
 
 import (
 	"errors"
 	"testing"
 
-	"github.com/ncbinh98/learn-ddd-go/aggregate"
+	"github.com/ncbinh98/learn-ddd-go/domain/customer"
 )
 
 func TestCustomer_NewCustomer(t *testing.T) {
@@ -18,7 +18,7 @@ func TestCustomer_NewCustomer(t *testing.T) {
 		{
 			test:        "Empty name validation",
 			name:        "",
-			expectedErr: aggregate.ErrInvalidPerson,
+			expectedErr: customer.ErrInvalidPerson,
 		},
 		{
 			test:        "Valid Name",
@@ -29,7 +29,7 @@ func TestCustomer_NewCustomer(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.test, func(t *testing.T) {
-			_, err := aggregate.NewCustomer(tc.name)
+			_, err := customer.NewCustomer(tc.name)
 
 			if !errors.Is(err, tc.expectedErr) {
 				t.Errorf("expected error %v, got %v", tc.expectedErr, err)
